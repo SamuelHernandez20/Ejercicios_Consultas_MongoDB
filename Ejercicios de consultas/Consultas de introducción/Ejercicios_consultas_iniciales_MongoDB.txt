@@ -1,0 +1,55 @@
+-- Pregunta 1: Encuentra todos los autores nacidos en el Reino Unido.
+
+db.autores.find({pais:"Reino Unido"}).pretty()
+
+-- Pregunta 2: Encuentra todos los libros publicados después del año 1950.
+
+db.libros.find({ "anio_publicacion": { $gt:1950 } }).pretty()
+
+-- Pregunta 3: Encuentra todos los libros del género "Novela".
+
+db.libros.find({genero:"Novela"}).pretty()
+
+-- Pregunta 4: Encuentra el libro con el título "1984".
+
+db.libros.findOne({titulo:"1984"})
+
+-- Pregunta 5: Encuentra todos los libros y ordénalos por año de publicación en orden descendente.
+
+db.libros.find().sort({anio_publicacion: -1})
+
+-- Pregunta 6: Limita los resultados a los primeros 3 libros más recientes.
+
+db.libros.find().sort({anio_publicacion: -1}).limit(3)
+
+-- Pregunta 7: Encuentra todos los libros escritos por "Jane Austen" (usa una proyección para mostrar solo los títulos).
+
+db.libros.find({autor_id: 2}, {titulo: 1, _id: 0})
+
+-- Pregunta 8:Encuentra autores que nacieron en Colombia o en el Reino Unido:
+
+db.autores.find({$or: [{ pais: "Colombia" }, { pais: "Reino Unido" } ]})
+
+-- Pregunta 9: Encuentra libros publicados entre 1800 y 1900:
+
+db.libros.find({ $and: [ { anio_publicacion: { $gte: 1800 } }, { anio_publicacion: { $lte: 1900 } }] })
+
+-- Pregunta 10: Encuentra autores que nacieron antes de 1900 y tienen más de un libro:
+
+db.autores.find({ $and: [ { fecha_nacimiento: { $lt: "1900-01-01" } }, { libros: { $size: { $gt: 1 } } }] });
+
+-- Pregunta 11: Encuentra libros cuyo género sea "Novela" o "Distopía":
+
+db.libros.find({$or: [{ genero: "Novela" }, { genero: "Distopía" } ]})
+
+-- Pregunta 12: Encuentra libros cuyo género sea "Novela" o "Distopía", que esten entre 1949 y 1970, haciendo una proyeccion de solo los titulos:
+
+db.libros.find({$or: [{ genero: "Novela" }, { genero: "Distopía" } ], $and: [ { anio_publicacion: { $gte: 1949 } }, { anio_publicacion: { $lte: 1970 } }]})
+
+-- Pregunta 13: Encuentra y actualiza el país de "George Orwell" a "Reino Unido e Irlanda":
+
+db.autores.findAndModify({
+  query: { nombre: "George Orwell" }, 
+  update: { $set: { pais: "Reino Unido e Irlanda..."}}, 
+  new: true
+})
